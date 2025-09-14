@@ -374,12 +374,14 @@ class HybridAttentionMambaModelConfig(VerifyAndUpdateConfig):
             block_size=model_config.max_model_len,
         ).page_size_bytes
 
+        block_alignment_bytes = 64
+
         # some attention backends (e.g. FA) only support setting
         # block size to multiple of 16, so let's suggest a value
         # that would work (note: FA is currently not compatible
         # with mamba layers, use FlashInfer instead).
-        attn_block_size = 16 * cdiv(mamba_page_size,
-                                    16 * attn_page_size_1_token)
+        attn_block_size = block_alignment_bytes * cdiv(mamba_page_size,
+                                    block_alignment_bytes * attn_page_size_1_token)
 
         # override attention block size if either (a) the
         # user has not set it or (b) the user has set it
