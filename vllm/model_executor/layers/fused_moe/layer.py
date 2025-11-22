@@ -1489,7 +1489,6 @@ class FusedMoE(CustomOp):
         def reduce_output(states: torch.Tensor) -> torch.Tensor:
             if (
                 not self.is_sequence_parallel
-                and not self.use_dp_chunking
                 and self.reduce_results
                 and (self.tp_size > 1 or self.ep_size > 1)
             ):
